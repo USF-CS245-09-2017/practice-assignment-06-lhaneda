@@ -1,77 +1,77 @@
 public class BinaryHeap {
-	private int[] heap;
+	private int[] data;
 	private int size;
 	
-	public BinaryHeap() {
-		heap = new int[10];
+	//Constructor
+	public BinaryHeap(){
+		data = new int[10];
 		size = 0;
 	}
 	
-	public int getSize() {
-		return size;
+	//multiply array size by 2
+	private void growArray() {
+		int[] temp = new int[data.length * 2];
+		System.arraycopy(data, 0, temp, 0, data.length);
+		data = temp;
 	}
 	
-	public int getHeapIndex(int i) {
-		if(i < 0 || i > size)
-			return -1;
-		return heap[i];
-	}
-	
-	public void growHeap() {
-		int[] temp = heap;
-		heap = new int[heap.length * 2];
-		System.arraycopy(temp, 0, heap, 0, temp.length);
-	}
-	
-	public void add(int index) {
-		if(heap.length <= size + 1)
-			growHeap();
-		heap[size] = index;
-		//System.out.print(heap[size++]);
-		while(index > 0 && heap[index] < heap[parent(index)]) {
+	//add to end of list and compare to parent
+	public void add(int priority) {
+		if(size >= data.length)
+			growArray();
+		int index = size;
+		data[size++] = priority;
+		while(data[index] < data[parent(index)]){
 			swap(index, parent(index));
 			index = parent(index);
 		}
-		size++;
 	}
 	
+	//remove calls shiftDown
 	public int remove() {
-		int priority = heap[0];
-		swap(0, --size);
-		if (size != 0) {
+		int temp = data[0];
+		if(size != 0){
 			shiftDown(0);
+			size--;
 		}
-		return priority;
+		return temp;
 	}
 	
-	public void shiftDown(int index) {
-		if (leftChild(index) >= size)
+	//shift down in array till it is in the right spot
+	private void shiftDown(int pos) {
+		if (left_child(pos) >= size)
 			return;
-		int child = leftChild(index);
-		if (rightChild(index) < size &&
-			heap[rightChild(index)] < heap[child])
-			child = rightChild(index);
-		if (heap[child] < heap[index]) {
-			swap(child, index);
+		int child = left_child(pos);
+		if (right_child(pos) < size &&
+				data[right_child(pos)] < data[child])
+			child = right_child(pos);
+		if (data[child] < data[pos]) {
+			swap(child, pos);
 			shiftDown(child);
 		}
-    }
-	
-	public int parent(int index) {
-        return (index - 1) / 2;
 	}
 	
-	public int leftChild(int index) {
-		return (index * 2) + 1;
+	//return parent index
+	private int parent(int index) {
+		if(index == 0)
+			return 0;
+		return ((index-1)/2);
 	}
 	
-	public int rightChild(int index) {
-		return (index * 2) + 2;
+	//return left child index
+	private int left_child(int pos) {
+		return (2 * pos) + 1;
 	}
 	
-	protected void swap(int x, int y) {
-        int temp = heap[x];
-        heap[x] = heap[y];
-        heap[y] = temp;        
-    }
+	//return right child index
+	private int right_child(int pos) {
+		return (2 * pos) + 2;
+	}
+	
+	//swap
+	private void swap(int index, int parent) {
+		int temp = data[index];
+		data[index] = data[parent];
+		data[parent] = temp;	
+	}
 }
