@@ -27,6 +27,10 @@ public class Practice6Test {
 	 */
 	public boolean insertRemoveTest() {
 		heap.add(1);
+		System.out.print(heap.getHeapIndex(0));
+		if(heap.getHeapIndex(0) == 1) {
+			return true;
+		}
 		if (heap.remove() == 1) {
 			return true;
 		}
